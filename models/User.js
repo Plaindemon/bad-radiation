@@ -7,5 +7,22 @@ const UserSchema = new Schema({
     // thoughts: { _id: },
     // add Array of _id values referencing the User model (self-reference)
     // friends: { _id: },
+    
 
-})
+    },
+    {
+        toJSON: {
+        virtuals: true
+        },
+        id: false
+    }
+  );
+
+UserSchema.virtual('username').get(function() {
+    return this.email.slice(0, this.email.indexOf('@'));
+});
+
+const User = model('User', UserSchema);
+
+module.exports = User;
+
