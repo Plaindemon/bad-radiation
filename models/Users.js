@@ -1,10 +1,11 @@
 const { Schema, model } = require('mongoose');
 
-const UserSchema = new Schema({
+const UserSchema = new Schema(
+    {
     name: { 
         type: String, 
         unique: true, 
-        // required: true, 
+        required: true, 
         // trim: true 
     },
     email: { 
@@ -13,26 +14,34 @@ const UserSchema = new Schema({
         unique: true, 
         match: [/.+@.+\..+/, 'Please enter a valid e-mail address'] 
     },
-    // add Array of _id values referencing the Thought model 
-    // thoughts: { _id: },
+    thoughts: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Thoughts'
+    }],
     // add Array of _id values referencing the User model (self-reference)
-    // friends: { _id: },
-    
-
+    friends: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Users'
+    }]
     },
     {
         toJSON: {
-        virtuals: true
+        virtuals: true,
+        getters: true
         },
         id: false
     }
   );
 
+UserSchema.virtual('friendCount').get(function() {
+    return this.friends.length;
+});
+
 UserSchema.virtual('username').get(function() {
     return this.email.slice(0, this.email.indexOf('@'));
 });
 
-const User = model('User', UserSchema);
+const Users = model('Users', UserSchema);
 
-module.exports = User;
+module.exports = Users;
 
