@@ -34,11 +34,16 @@ const userController = {
             .catch(err => res.status(400).json(err));
     },
     // Create Friend 
-    createFriends({ params, body }, res) {
+    createFriends({ params }, res) {
         Users.findOneAndUpdate({ _id: params.id }, { $push: { friends: params.friendId } }, { new: true })
+        .populate({
+            path: 'friends',
+            select: '-__v'
+          })
+          .select('-__v')
             .then(dbUserData => {
                 if (!dbUserData) {
-                    res.status(404).json({ message: 'No friends with this id!' });
+                    res.status(404).json({ message: 'No friend found with this id!' });
                     return;
                 }
                 res.json(dbUserData)
@@ -48,6 +53,11 @@ const userController = {
     deleteFriends({ params, body }, res) {
         console.log(body)
         Users.findOneAndUpdate({ _id: params.id }, { $pull: { friends: params.friendId } }, { new: true })
+        .populate({
+            path: 'friends',
+            select: '-__v'
+          })
+          .select('-__v')
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(404).json({ message: 'No friends with this id!' });
