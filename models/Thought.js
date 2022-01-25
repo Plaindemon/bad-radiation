@@ -5,6 +5,7 @@ const ReactionSchema = new Schema({
     reactionId: { 
         type: Schema.Types.ObjectId,
         default: () => new Types.ObjectId(),
+        ref: 'Thought'
     },
     reactionBody: {
         type: String, 
@@ -32,12 +33,13 @@ const ThoughtSchema = new Schema(
     thoughtText: { 
         type: String, 
         required: true, 
-        validate: [({ length }) => length >= 1 && length <= 128, 'Thought should be between 1-128 Characters long.']
+        minLength: 1,
+        maxLength: 228
     }, 
     thoughtCreatedAt: {
       type: Date,
       default: Date.now,
-      get: (createdAtVal) => moment(createdAtVal).format('MMM DD, YYYY [at] hh:mm a')
+    //   get: (createdAtVal) => moment(createdAtVal).format('MMM DD, YYYY [at] hh:mm a')
     },
     username: { 
         type: String, 
@@ -60,11 +62,6 @@ ThoughtSchema.virtual('reactionCount').get(function() {
     return this.reactions.length;
 });
 
-const Thoughts = model('Thoughts', ThoughtSchema);
-const Reactions = model('Reactions', ReactionSchema);
+const Thought = model('Thought', ThoughtSchema);
 
-
-module.exports = {
-    Thoughts,
-    Reactions
-};
+module.exports = Thought;

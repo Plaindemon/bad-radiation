@@ -16,7 +16,7 @@ const UserSchema = new Schema(
     },
     thoughts: [{ 
         type: Schema.Types.ObjectId, 
-        ref: 'Thoughts'
+        ref: 'Thought'
     }],
     // add Array of _id values referencing the User model (self-reference)
     friends: [{
