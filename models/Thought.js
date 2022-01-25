@@ -1,16 +1,17 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
 
 const ReactionSchema = new Schema({
     reactionId: { 
         type: Schema.Types.ObjectId,
         default: () => new Types.ObjectId(),
-        ref: 'Thought'
+        // ref: 'Thought'
     },
     reactionBody: {
         type: String, 
         required: true,
-        validate: [({ length }) => length >= 1 && length <= 128, 'Thought should be between 1-128 Characters long.']
+        minLength: 1,
+        maxLength: 255
     },
     username: {
         type: String, 
